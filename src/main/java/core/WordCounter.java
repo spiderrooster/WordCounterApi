@@ -1,61 +1,56 @@
 package core;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
 public class WordCounter {
 
-    long wordSum = 0;
-    long wordTally = 0;
+    int letterSum = 0;
+    int wordSum = 0;
     double average = 0.0;
+
+    List<Counter> lengthsOfWords;
 
     public static void main(String[] args) {
         WordCounter wordCounter = new WordCounter();
+        String initialString = "Hello world & good morning. The date is 18/05/2016";
+        InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
 
-        String result = wordCounter.trimString("hello   hello    hello");
-        System.out.println(result);
+        wordCounter.readInputStream(targetStream);
+        System.out.println("Word Count = " + wordCounter.getWordSum());
+        System.out.println("Letter  Count " + wordCounter.getLetterSum());
+        System.out.println("Average word length " + wordCounter.getAverage());
+    }
 
-        double avergae = wordCounter.averageLengthList(Arrays.asList("12", "hello", "hello"));
-        System.out.println(avergae);
+    public int getLetterSum() {
+        return letterSum;
+    }
 
-        int max = wordCounter.maxLength(Arrays.asList("12", "12345", "123456789"));
-        System.out.println("max: " + max);
+    public int getWordSum() {
+        return wordSum;
+    }
 
-        int min = wordCounter.minLength(Arrays.asList("12", "12345", "123456789"));
-        System.out.println("min: " + min);
-
-        int total = 0;
-
-        String trimmed = wordCounter.trimString("Hello world & good morning. The date is 18/05/2016");
-        List<String> split = wordCounter.splitString(trimmed, " ");
-        total += split.size();
-        System.out.println("Word Count = " + total);
-        System.out.println("Word Count = " + total);
+    public double getAverage() {
+        return average;
     }
 
     public void readInputStream(InputStream inputStream) {
+        letterSum = 0;
         wordSum = 0;
-        wordTally = 0;
         average = 0.0;
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             while (reader.ready()) {
                 String trimmedLine = trimString(reader.readLine());
+                letterSum += trimmedLine.length();
                 List<String> split = splitString(trimmedLine, " ");
-                for (String value : split) {
-                    wordSum += value.length();
-                }
-                wordTally += split.size();
+                wordSum += split.size();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        average = (double) wordSum / (double) wordTally;
+        average = averageLength(letterSum, wordSum);
     }
 
     public String trimString(String toTrim) {
@@ -64,6 +59,10 @@ public class WordCounter {
 
     public List<String> splitString(String toSplit, String regex) {
         return Arrays.asList(toSplit.split(regex));
+    }
+
+    public double averageLength(int sum, int total) {
+        return sum / (double) total;
     }
 
     public double averageLengthList(List<String> listToAverage) {
