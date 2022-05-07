@@ -5,12 +5,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class WordCounter {
-
-    int letterSum = 0;
-    int wordSum = 0;
-    double average = 0.0;
-
-    Map<Integer, Counter> lengthsOfWords = new HashMap<>();
+    private int letterSum = 0;
+    private int wordCount = 0;
+    private double average = 0.0;
+    private Map<Integer, Integer> lengthsOfWords = new HashMap<>();
 
     public static void main(String[] args) {
         WordCounter wordCounter = new WordCounter();
@@ -18,26 +16,34 @@ public class WordCounter {
         InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
 
         wordCounter.readInputStream(targetStream);
-        System.out.println("Word Count = " + wordCounter.getWordSum());
+        System.out.println("Word Count = " + wordCounter.getWordCount());
         System.out.println("Letter Count " + wordCounter.getLetterSum());
-        System.out.printf("Average word length %f", wordCounter.getAverage());
+        System.out.printf("Average word length %f \n\r", wordCounter.getAverage());
+
+        for (Map.Entry<Integer, Integer> entry : wordCounter.getLengthsOfWords().entrySet()) {
+            System.out.printf("Number of words of length %d is %d \n\r", entry.getKey(), entry.getValue());
+        }
     }
 
     public int getLetterSum() {
         return letterSum;
     }
 
-    public int getWordSum() {
-        return wordSum;
+    public int getWordCount() {
+        return wordCount;
     }
 
     public double getAverage() {
         return average;
     }
 
+    public Map<Integer, Integer> getLengthsOfWords() {
+        return lengthsOfWords;
+    }
+
     public void readInputStream(InputStream inputStream) {
         letterSum = 0;
-        wordSum = 0;
+        wordCount = 0;
         average = 0.0;
         lengthsOfWords.clear();
 
@@ -50,19 +56,20 @@ public class WordCounter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        average = averageLength(letterSum, wordSum);
+        average = averageLength(letterSum, wordCount);
     }
 
     private void processSplit(List<String> split) {
         for (String element : split) {
+            System.out.println(element + " " + element.length());
             int elementLength = element.length();
             if (elementLength > 0) {
-                wordSum++;
+                wordCount++;
                 letterSum += elementLength;
-                if (lengthsOfWords.stream().map(x -> x.length).collect(Collectors.toList()).contains(elementLength)) {
-                    lengthsOfWords.get()
+                if (lengthsOfWords.containsKey(elementLength)) {
+                    lengthsOfWords.put(elementLength, (lengthsOfWords.get(elementLength) + 1));
                 } else {
-                    lengthsOfWords.add(new Counter(elementLength, elementLength))
+                    lengthsOfWords.put(elementLength, elementLength);
                 }
             }
         }
