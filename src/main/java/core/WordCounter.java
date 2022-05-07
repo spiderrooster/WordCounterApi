@@ -1,8 +1,8 @@
 package core;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WordCounter {
 
@@ -10,7 +10,7 @@ public class WordCounter {
     int wordSum = 0;
     double average = 0.0;
 
-    List<Counter> lengthsOfWords;
+    Map<Integer, Counter> lengthsOfWords = new HashMap<>();
 
     public static void main(String[] args) {
         WordCounter wordCounter = new WordCounter();
@@ -19,8 +19,8 @@ public class WordCounter {
 
         wordCounter.readInputStream(targetStream);
         System.out.println("Word Count = " + wordCounter.getWordSum());
-        System.out.println("Letter  Count " + wordCounter.getLetterSum());
-        System.out.println("Average word length " + wordCounter.getAverage());
+        System.out.println("Letter Count " + wordCounter.getLetterSum());
+        System.out.printf("Average word length %f", wordCounter.getAverage());
     }
 
     public int getLetterSum() {
@@ -39,13 +39,13 @@ public class WordCounter {
         letterSum = 0;
         wordSum = 0;
         average = 0.0;
+        lengthsOfWords.clear();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             while (reader.ready()) {
                 String trimmedLine = trimString(reader.readLine());
-                letterSum += trimmedLine.length();
                 List<String> split = splitString(trimmedLine, " ");
-                wordSum += split.size();
+                processSplit(split);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -53,8 +53,25 @@ public class WordCounter {
         average = averageLength(letterSum, wordSum);
     }
 
+    private void processSplit(List<String> split) {
+        for (String element : split) {
+            int elementLength = element.length();
+            if (elementLength > 0) {
+                wordSum++;
+                letterSum += elementLength;
+                if (lengthsOfWords.stream().map(x -> x.length).collect(Collectors.toList()).contains(elementLength)) {
+                    lengthsOfWords.get()
+                } else {
+                    lengthsOfWords.add(new Counter(elementLength, elementLength))
+                }
+            }
+        }
+    }
+
     public String trimString(String toTrim) {
-        return toTrim.replaceAll("\\s+", " ");
+        toTrim = toTrim.replaceAll("\\.", " ");
+        toTrim = toTrim.replaceAll("\\s+", " ");
+        return toTrim;
     }
 
     public List<String> splitString(String toSplit, String regex) {
@@ -68,13 +85,4 @@ public class WordCounter {
     public double averageLengthList(List<String> listToAverage) {
         return listToAverage.stream().map(String::length).mapToDouble(l -> l).average().orElse(0.0);
     }
-
-    public int maxLength(List<String> listToMax) {
-        return listToMax.stream().map(String::length).mapToInt(l -> l).max().orElse(0);
-    }
-
-    public int minLength(List<String> listToMax) {
-        return listToMax.stream().map(String::length).mapToInt(l -> l).min().orElse(0);
-    }
-
 }
