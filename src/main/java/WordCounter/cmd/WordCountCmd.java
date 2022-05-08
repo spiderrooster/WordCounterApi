@@ -30,7 +30,7 @@ public class WordCountCmd implements Runnable {
                 InputStream is = ioUtils.createInputStream(fileToCount);
                 wordCounter.readInputStream(is);
             } catch (IOException e) {
-                LOGGER.error("Unable to create InputStream", e);
+                LOGGER.error(e);
             }
         }
     }

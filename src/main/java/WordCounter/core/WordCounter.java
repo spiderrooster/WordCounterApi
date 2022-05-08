@@ -19,8 +19,12 @@ public class WordCounter {
         String initialString = "Hello world & good morning. The date is 18/05/2016";
         InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
 
-        wordCounter.readInputStream(targetStream);
-        wordCounter.printInfo();
+        try {
+            wordCounter.readInputStream(targetStream);
+            wordCounter.printInfo();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getLetterCount() {
@@ -40,7 +44,7 @@ public class WordCounter {
     }
 
 
-    public void readInputStream(InputStream inputStream) {
+    public void readInputStream(InputStream inputStream) throws IOException {
         reset();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             while (reader.ready()) {
@@ -50,7 +54,7 @@ public class WordCounter {
             }
         } catch (IOException e) {
             LOGGER.error("Unable to create BufferedReader", e);
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
         average = averageLength(letterCount, wordCount);
     }
@@ -91,7 +95,7 @@ public class WordCounter {
         average = 0.0;
         lengthsOfWords.clear();
     }
-    
+
     private void printInfo() {
         LOGGER.info("Word Count = {}", getWordCount());
         LOGGER.info("Letter Count {}", getLetterCount());
