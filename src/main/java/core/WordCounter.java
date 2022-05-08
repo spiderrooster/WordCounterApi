@@ -1,4 +1,4 @@
-package WordCounter.core;
+package core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +42,6 @@ public class WordCounter {
     public Map<Integer, Integer> getLengthsOfWords() {
         return lengthsOfWords;
     }
-
 
     public void readInputStream(InputStream inputStream) throws IOException {
         reset();
@@ -96,7 +95,7 @@ public class WordCounter {
         lengthsOfWords.clear();
     }
 
-    private void printInfo() {
+    public void printInfo() {
         LOGGER.info("Word Count = {}", getWordCount());
         LOGGER.info("Letter Count {}", getLetterCount());
         LOGGER.info("Average word length {}", String.format("%.03f", getAverage()));
@@ -118,7 +117,7 @@ public class WordCounter {
         if (maxFrequencyMap.size() == 1) {
             frequencyBuilder.append("The most frequently occurring word length is ")
                     .append(maxFrequency)
-                    .append("for word lengths of").append(new ArrayList<>(maxFrequencyMap.values()).get(0));
+                    .append(" for word lengths of ").append(new ArrayList<>(maxFrequencyMap.values()).get(0));
         } else {
             frequencyBuilder.append("The most frequently occurring word length is ")
                     .append(maxFrequency)

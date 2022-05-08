@@ -1,4 +1,4 @@
-package WordCounter.cmd;
+package cmd;
 
 public class WordCountCmdTest {
 

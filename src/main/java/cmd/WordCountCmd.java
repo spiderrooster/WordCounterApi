@@ -1,7 +1,7 @@
-package WordCounter.cmd;
+package cmd;
 
-import WordCounter.core.WordCounter;
-import WordCounter.util.IOUtils;
+import core.WordCounter;
+import util.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
@@ -12,8 +12,10 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 public class WordCountCmd implements Runnable {
+
     private static final Logger LOGGER = LogManager.getLogger(WordCountCmd.class);
     private IOUtils ioUtils;
+    private WordCounter wordCounter;
 
     @Option(names = {"-f", "--file"}, description = "Path to file", required = true)
     private Path fileToCount;
@@ -22,13 +24,17 @@ public class WordCountCmd implements Runnable {
         this.ioUtils = ioUtils;
     }
 
+    public void setWordCounter(WordCounter wordCounter) {
+        this.wordCounter = wordCounter;
+    }
+
     @Override
     public void run() {
         if (ioUtils.doesExist(fileToCount) && ioUtils.isRegularFile(fileToCount)) {
-            WordCounter wordCounter = new WordCounter();
             try {
                 InputStream is = ioUtils.createInputStream(fileToCount);
                 wordCounter.readInputStream(is);
+                wordCounter.printInfo();
             } catch (IOException e) {
                 LOGGER.error(e);
             }
@@ -38,6 +44,7 @@ public class WordCountCmd implements Runnable {
     public static void main(String[] args) {
         WordCountCmd wordCountCmd = new WordCountCmd();
         wordCountCmd.setIoUtils(new IOUtils());
+        wordCountCmd.setWordCounter(new WordCounter());
         new CommandLine(wordCountCmd).execute(args);
     }
 }
