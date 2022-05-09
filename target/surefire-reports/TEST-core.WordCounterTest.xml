@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="0" failures="0" name="core.WordCounterTest" time="0" errors="0" skipped="0">
+<testsuite tests="5" failures="0" name="core.WordCounterTest" time="0.264" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2021.3"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -64,4 +64,9 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
+  <testcase classname="core.WordCounterTest" name="synalogikStringTest" time="0"/>
+  <testcase classname="core.WordCounterTest" name="allWordsDifferentSizeStringTest" time="0"/>
+  <testcase classname="core.WordCounterTest" name="allWordsSameSizeStringTest" time="0"/>
+  <testcase classname="core.WordCounterTest" name="tesThreeLargeOneSmallSizeStringTest" time="0"/>
+  <testcase classname="core.WordCounterTest" name="bibleTest" time="0.264"/>
 </testsuite>
