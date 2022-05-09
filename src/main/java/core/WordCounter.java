@@ -14,19 +14,6 @@ public class WordCounter {
     private double average = 0.0;
     private final Map<Integer, Integer> lengthsOfWords = new HashMap<>();
 
-    public static void main(String[] args) {
-        WordCounter wordCounter = new WordCounter();
-        String initialString = "Hello world & good morning. The date is 18/05/2016";
-        InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
-
-        try {
-            wordCounter.readInputStream(targetStream);
-            wordCounter.printInfo();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public int getLetterCount() {
         return letterCount;
     }
