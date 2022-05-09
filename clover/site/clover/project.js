@@ -1,0 +1,2 @@
+processClover (  {"children":["core/","util/","cmd/"],"name":"Clover database Tue May 10 2022 00:09:08 BST","stats":{"AvgMethodComplexity":1.7,"Complexity":34,"ErroneousTests":0,"FailingTests":0,"FilteredElements":0,"PassingTests":0,"PcErroneousTests":-1,"PcFailingTests":-1,"PcPassingTests":-1,"TestExecutionTime":0,"Tests":0,"TotalChildren":3,"TotalPercentageCovered":91.66667,"TotalStatements":70,"UncoveredElements":9},"title":"WordCounterApi 1.0.0.0-SNAPSHOT"}
+ ); 
