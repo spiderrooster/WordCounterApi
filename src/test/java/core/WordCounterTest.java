@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
+import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,12 +30,10 @@ import static org.mockito.Mockito.when;
 @RunWith( MockitoJUnitRunner.class )
 public class WordCounterTest
 {
-    @Mock
-    private Appender mockAppender;
-
     private final List<LogEvent> capturedEvents = new ArrayList<>();
-
-    private Logger logger;
+    @Mock
+    private       Appender       mockAppender;
+    private       Logger         logger;
 
     private WordCounter wcts = new WordCounter();
 
@@ -90,6 +89,17 @@ public class WordCounterTest
         assertThat( wcts.getWordCount() ).isEqualTo( 9 );
         assertThat( wcts.getLetterCount() ).isEqualTo( 41 );
         assertThat( wcts.getLengthsOfWords() ).isEqualTo( map );
+        Assertions.assertThat( verifyLogMessages( "Word Count = 9",
+                                                  "Letter Count 41",
+                                                  "Average word length 4.556",
+                                                  "Number of words of length 1 is 1",
+                                                  "Number of words of length 2 is 1",
+                                                  "Number of words of length 3 is 1",
+                                                  "Number of words of length 4 is 2",
+                                                  "Number of words of length 5 is 2",
+                                                  "Number of words of length 7 is 1",
+                                                  "Number of words of length 10 is 1",
+                                                  "The most frequently occurring word length is 2 for word lengths of 4 & 5" ) ).isTrue();
     }
 
 
@@ -113,6 +123,12 @@ public class WordCounterTest
         assertThat( wcts.getWordCount() ).isEqualTo( 4 );
         assertThat( wcts.getLetterCount() ).isEqualTo( 26 );
         assertThat( wcts.getLengthsOfWords() ).isEqualTo( map );
+        Assertions.assertThat( verifyLogMessages( "Word Count = 4",
+                                                  "Letter Count 26",
+                                                  "Average word length 6.500",
+                                                  "Number of words of length 5 is 1",
+                                                  "Number of words of length 7 is 3",
+                                                  "The most frequently occurring word length is 3 for word lengths of 3" ) ).isTrue();
     }
 
     @Test
@@ -135,6 +151,11 @@ public class WordCounterTest
         assertThat( wcts.getWordCount() ).isEqualTo( 6 );
         assertThat( wcts.getLetterCount() ).isEqualTo( 30 );
         assertThat( wcts.getLengthsOfWords() ).isEqualTo( map );
+        Assertions.assertThat( verifyLogMessages( "Word Count = 6",
+                                                  "Letter Count 30",
+                                                  "Average word length 5.000",
+                                                  "Number of words of length 5 is 6",
+                                                  "The most frequently occurring word length is 6 for word lengths of 6" ) ).isTrue();
     }
 
     @Test
@@ -157,6 +178,17 @@ public class WordCounterTest
         assertThat( wcts.getWordCount() ).isEqualTo( 6 );
         assertThat( wcts.getLetterCount() ).isEqualTo( 21 );
         assertThat( wcts.getLengthsOfWords() ).isEqualTo( map );
+        Assertions.assertThat( verifyLogMessages( "Word Count = 6",
+                                                  "Letter Count 21",
+                                                  "Average word length 3.500",
+                                                  "Number of words of length 1 is 1",
+                                                  "Number of words of length 2 is 1",
+                                                  "Number of words of length 3 is 1",
+                                                  "Number of words of length 4 is 1",
+                                                  "Number of words of length 5 is 1",
+                                                  "Number of words of length 6 is 1",
+                                                  "The most frequently occurring word length is 1 for word lengths of 1 & 2 & 3 & 4 & 5 & 6" ) ).isTrue();
+
     }
 
     @Test
@@ -181,6 +213,28 @@ public class WordCounterTest
         assertThat( wcts.getWordCount() ).isEqualTo( 793893 );
         assertThat( wcts.getLetterCount() ).isEqualTo( 3341973 );
         assertThat( wcts.getLengthsOfWords() ).isEqualTo( map );
+        Assertions.assertThat( verifyLogMessages( "Word Count = 793893",
+                                                  "Letter Count 3341973",
+                                                  "Average word length 4.210",
+                                                  "Number of words of length 1 is 18563",
+                                                  "Number of words of length 2 is 126810",
+                                                  "Number of words of length 3 is 213311",
+                                                  "Number of words of length 4 is 165112",
+                                                  "Number of words of length 5 is 102877",
+                                                  "Number of words of length 6 is 53903",
+                                                  "Number of words of length 7 is 47726",
+                                                  "Number of words of length 8 is 27614",
+                                                  "Number of words of length 9 is 19303",
+                                                  "Number of words of length 10 is 9680",
+                                                  "Number of words of length 11 is 4834",
+                                                  "Number of words of length 12 is 2236",
+                                                  "Number of words of length 13 is 1129",
+                                                  "Number of words of length 14 is 598",
+                                                  "Number of words of length 15 is 140",
+                                                  "Number of words of length 16 is 41",
+                                                  "Number of words of length 17 is 14",
+                                                  "Number of words of length 18 is 2",
+                                                  "The most frequently occurring word length is 213311 for word lengths of 213311" ) ).isTrue();
     }
 
     private boolean verifyLogMessages( String... wantedMessages )
@@ -189,10 +243,6 @@ public class WordCounterTest
         List<String>   renderedMessages      = renderedMessageStream.collect( Collectors.toList() );
 
         boolean verified = true;
-        for ( String rendered : renderedMessages )
-        {
-            System.out.println( rendered );
-        }
         for ( String wantedMessage : wantedMessages )
         {
             verified &= renderedMessages.stream().anyMatch( s -> s.contains( wantedMessage ) );
